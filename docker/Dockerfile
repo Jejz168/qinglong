@@ -30,7 +30,7 @@ RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get upgrade -y \
-  && apt-get --no-cache add -f bash \
+  && apt-get install --no-install-recommends -y bash \
   coreutils \
   git \
   curl \
