@@ -1,27 +1,20 @@
 name: Build And Push Docker Image
 
 on:
-  push:
-    branches:
-      - 'master'
-      - 'develop'
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   schedule:
     # 参考 https://jasonet.co/posts/scheduled-actions/
     # note: 这里是GMT时间，北京时间减去八小时即可。如北京时间 22:30 => GMT 14:30
     # minute hour day month dayOfWeek
-    - cron: '00 14 * * *' # GMT 14:00 => 北京时间 22:00
+    - cron: '7 7 7 7 *' # GMT 14:00 => 北京时间 22:00
     #- cron: '30 16 * * *' # GMT 16:30（前一天） => 北京时间 00:30
   workflow_dispatch:
 
 jobs:
   build-static:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
           node-version: '14'
 
@@ -30,7 +23,7 @@ jobs:
           yarn install
           yarn build
           yarn build-back
-
+          
       - name: copy to static repo
         env:
           GITHUB_REPO: github.com/${{ github.repository_owner }}/qinglong-static
@@ -43,12 +36,12 @@ jobs:
           git config --local user.name 'github-actions[bot]'
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
           git commit --allow-empty -m "copy static at $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --force --quiet "https://${{ secrets.API_TOKEN }}@${GITHUB_REPO}.git" ${GITHUB_BRANCH}:${GITHUB_BRANCH}
+          git push --force --quiet "https://${{ secrets.API_TOKEN }}@github.com/Jejz168/qinglong-static.git" ${GITHUB_BRANCH}:${GITHUB_BRANCH}
 
   build:
     needs: build-static
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     permissions:
       packages: write
@@ -108,7 +101,7 @@ jobs:
           build-args: |
             MAINTAINER=${{ github.repository_owner }}
             QL_BRANCH=${{ github.ref_name }}
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/s390x
+          platforms: linux/amd64
           context: docker/
           push: true
           tags: ${{ steps.meta.outputs.tags }}
