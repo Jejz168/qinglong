@@ -115,8 +115,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: jejz/qinglong:debian
           cache-from: type=registry,ref=whyour/qinglong:cache
           cache-to: type=registry,ref=whyour/qinglong:cache,mode=max
       
