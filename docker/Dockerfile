@@ -1,4 +1,4 @@
-FROM python:3.10-alpine as builder
+FROM python:3.10-slim-bullseye as builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
   && apk update \
@@ -7,7 +7,7 @@ RUN set -x \
   && cd /tmp/build \
   && pnpm --registry https://registry.npmmirror.com install --prod
 
-FROM python:3.10-alpine
+FROM python:3.10-slim-bullseye
 
 ARG QL_MAINTAINER="Jejz168"
 LABEL maintainer="${QL_MAINTAINER}"
