@@ -40,7 +40,7 @@ RUN set -x \
     && chmod 777 ${QL_DIR}/shell/*.sh \
     && chmod 777 ${QL_DIR}/docker/*.sh \
     && apk add nodejs npm git \
-    && npm i -g pnpm@8.3.1 pm2 ts-node typescript tslib \
+    && npm i -g umi pnpm@8.3.1 pm2 ts-node typescript tslib \
     && rm -rf /root/.npm \
     && pnpm install --prod \
     && rm -rf /root/.pnpm-store \
