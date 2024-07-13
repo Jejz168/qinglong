@@ -39,8 +39,8 @@ RUN set -x \
     && cp -f .env.example .env \
     && chmod 777 ${QL_DIR}/shell/*.sh \
     && chmod 777 ${QL_DIR}/docker/*.sh \
-    && npm install -g npm@10.8.2 pnpm@8.3.1 \
-    && pnpm install -g pm2 ts-node typescript tslib \
+    && apk add nodejs npm git \
+    && npm i -g pnpm@8.3.1 pm2 ts-node typescript tslib \
     && rm -rf /root/.npm \
     && pnpm install --prod \
     && rm -rf /root/.pnpm-store \
