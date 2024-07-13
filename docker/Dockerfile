@@ -1,8 +1,10 @@
+FROM node:20-slim as nodebuilder
+
 FROM python:3.10-slim-bullseye as builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
-  && apk update \
-  && apk add nodejs npm git \
+  && apt-get update \
+  && apt-get add nodejs npm git \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
   && pnpm --registry https://registry.npmmirror.com install --prod
@@ -25,9 +27,9 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
 
 RUN set -x \
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-  && apk update -f \
-  && apk upgrade \
-  && apk --no-cache add -f bash \
+  && apt-get update -f \
+  && apt-get upgrade \
+  && apt-get --no-cache add -f bash \
   coreutils \
   git \
   curl \
@@ -43,7 +45,7 @@ RUN set -x \
   netcat-openbsd \
   npm \
   && rm -rf /var/cache/apk/* \
-  && apk update \
+  && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo "Asia/Shanghai" > /etc/timezone \
   && git config --global user.email "qinglong@@users.noreply.github.com" \
