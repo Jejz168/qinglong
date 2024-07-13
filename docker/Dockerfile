@@ -5,6 +5,7 @@ COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
+  && apt-get install --no-install-recommends -y libatomic1 \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
   && pnpm --registry https://registry.npmmirror.com install --prod
@@ -42,7 +43,7 @@ RUN set -x \
   jq \
   procps \
   netcat-openbsd \
-  npm \
+  libatomic1 \
   && rm -rf /var/cache/apk/* \
   && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
