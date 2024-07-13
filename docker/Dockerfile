@@ -28,8 +28,8 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
 
 RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
-  && apt-get update -f \
-  && apt-get upgrade \
+  && apt-get update \
+  && apt-get upgrade -y \
   && apt-get --no-cache add -f bash \
   coreutils \
   git \
