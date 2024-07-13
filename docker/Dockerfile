@@ -41,7 +41,6 @@ RUN set -x \
   openssh-client \
   nginx \
   jq \
-  openssh \
   procps \
   netcat-openbsd \
   npm \
