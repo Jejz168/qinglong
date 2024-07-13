@@ -9,7 +9,7 @@ RUN set -x \
 
 FROM python:3.10-alpine
 
-ARG QL_MAINTAINER="whyour"
+ARG QL_MAINTAINER="Jejz168"
 LABEL maintainer="${QL_MAINTAINER}"
 ARG QL_URL=https://github.com/${QL_MAINTAINER}/qinglong.git
 ARG QL_BRANCH=develop
