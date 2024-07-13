@@ -3,6 +3,7 @@ FROM node:20-slim as nodebuilder
 FROM python:3.10-slim-bullseye as builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
+  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get add nodejs npm git \
   && npm i -g pnpm@8.3.1 \
@@ -26,7 +27,7 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
   QL_BRANCH=${QL_BRANCH}
 
 RUN set -x \
-  && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update -f \
   && apt-get upgrade \
   && apt-get --no-cache add -f bash \
