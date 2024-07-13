@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.12
+FROM node:alpine
 ARG QL_MAINTAINER="Jejz168"
 LABEL maintainer="${QL_MAINTAINER}"
 ARG QL_URL=https://github.com/${QL_MAINTAINER}/qinglong.git
@@ -39,9 +39,8 @@ RUN set -x \
     && cp -f .env.example .env \
     && chmod 777 ${QL_DIR}/shell/*.sh \
     && chmod 777 ${QL_DIR}/docker/*.sh \
-    && npm install -g pnpm \
-    && pnpm install -g pm2 \
-    && pnpm install -g ts-node typescript tslib \
+    && npm install -g npm@10.8.2 pnpm@8.3.1 \
+    && pnpm install -g pm2 ts-node typescript tslib \
     && rm -rf /root/.npm \
     && pnpm install --prod \
     && rm -rf /root/.pnpm-store \
