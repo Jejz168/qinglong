@@ -38,7 +38,6 @@ RUN set -x \
   perl \
   openssl \
   nginx \
-  nodejs \
   jq \
   openssh \
   procps \
