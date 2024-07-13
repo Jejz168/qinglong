@@ -2,6 +2,8 @@ FROM node:20-slim as nodebuilder
 
 FROM python:3.10-slim-bullseye as builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
+COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
+COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
@@ -25,6 +27,9 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
   PS1="\u@\h:\w \$ " \
   QL_DIR=/ql \
   QL_BRANCH=${QL_BRANCH}
+
+COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
+COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 
 RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
