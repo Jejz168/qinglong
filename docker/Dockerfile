@@ -40,10 +40,10 @@ RUN set -x \
     && chmod 777 ${QL_DIR}/shell/*.sh \
     && chmod 777 ${QL_DIR}/docker/*.sh \
     && npm install -g pnpm@8.3.1 \
-    && npm install -g pm2 \
-    && npm install -g ts-node typescript tslib \
+    && pnpm install -g pm2 \
+    && pnpm install -g ts-node typescript tslib \
+    && pnpm install --prod \
     && rm -rf /root/.npm \
-    && npm install --prod \
     && rm -rf /root/.pnpm-store \
     && git clone -b ${QL_BRANCH} https://github.com/${QL_MAINTAINER}/qinglong-static.git /static \
     && cp -rf /static/* ${QL_DIR} \
