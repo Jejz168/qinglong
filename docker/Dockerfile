@@ -40,6 +40,7 @@ RUN set -x \
     && chmod 777 ${QL_DIR}/shell/*.sh \
     && chmod 777 ${QL_DIR}/docker/*.sh \
     && npm install -g pnpm \
+    && pnpm setup \
     && pnpm install -g pm2 \
     && pnpm install -g ts-node typescript tslib \
     && rm -rf /root/.npm \
