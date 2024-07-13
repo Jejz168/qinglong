@@ -28,9 +28,6 @@ RUN set -x \
                              jq \
                              openssh \
                              py3-pip \
-                             python2 \
-                             g++ \
-                             make \
     && rm -rf /var/cache/apk/* \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
