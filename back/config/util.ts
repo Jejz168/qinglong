@@ -101,11 +101,13 @@ export async function getNetIp(req: any) {
       .buffer();
     const [data, ipApiBody] = await Promise.all<any>([baiduApi, ipApi]);
 
-    const ipRegx = /.*IP	:(.*)\n/;
-    const addrRegx = /.*数据二	:(.*)\n/;
-    if (data && ipRegx.test(data) && addrRegx.test(data)) {
-      const ip = data.match(ipRegx)[1];
-      const addr = data.match(addrRegx)[1];
+    const ipRegx = /IP\s*:\s*(.*)/;
+    const addrRegx = /数据二\s*:\s*(.*)/;
+    const ipMatch = data?.match(ipRegx);
+    const addrMatch = data?.match(addrRegx);
+    if (ipMatch && addrMatch) {
+      const ip = ipMatch[1].trim();
+      const addr = addrMatch[1].trim();
       return { address: addr, ip };
     } else if (ipApiBody) {
       const { addr, ip } = JSON.parse(iconv.decode(ipApiBody, 'GBK'));
