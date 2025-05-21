@@ -109,7 +109,7 @@ export async function getNetIp(req: any) {
     const addrMatch = data?.match(addrRegx);
     if (ipMatch && addrMatch) {
       const ip = ipMatch[1].trim();
-      const addr = addrMatch[1].trim();
+      const addr = addrMatch[1].split('|')[0].trim();
       return { address: addr, ip };
     } else if (ipApiBody) {
       const { addr, ip } = JSON.parse(iconv.decode(ipApiBody, 'GBK'));
