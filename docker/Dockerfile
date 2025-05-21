@@ -2,15 +2,12 @@ FROM node:20-slim as nodebuilder
 
 FROM python:3.10-slim-bullseye as builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
-COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
-COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 RUN set -x \
-  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
-  && apt-get install --no-install-recommends -y libatomic1 \
+  && apt-get add nodejs npm git \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
-  && pnpm install --prod
+  && pnpm --registry https://registry.npmmirror.com install --prod
 
 FROM python:3.10-slim-bullseye
 
@@ -28,14 +25,11 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
   QL_DIR=/ql \
   QL_BRANCH=${QL_BRANCH}
 
-COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
-COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
-
 RUN set -x \
-  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
-  && apt-get update \
-  && apt-get upgrade -y \
-  && apt-get install --no-install-recommends -y bash \
+  && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+  && apt-get update -f \
+  && apt-get upgrade \
+  && apt-get --no-cache add -f bash \
   coreutils \
   git \
   curl \
@@ -43,12 +37,12 @@ RUN set -x \
   tzdata \
   perl \
   openssl \
-  openssh-client \
   nginx \
   jq \
+  openssh \
   procps \
   netcat-openbsd \
-  libatomic1 \
+  npm \
   && rm -rf /var/cache/apk/* \
   && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -78,6 +72,11 @@ RUN git clone --depth=1 -b ${QL_BRANCH} ${QL_URL} ${QL_DIR} \
 COPY --from=builder /tmp/build/node_modules/. /ql/node_modules/
 
 WORKDIR ${QL_DIR}
+
+HEALTHCHECK --interval=5s --timeout=2s --retries=20 \
+  CMD curl -sf http://127.0.0.1:5400/api/health || exit 1
+
+ENTRYPOINT ["./docker/docker-entrypoint.sh"]
 
 HEALTHCHECK --interval=5s --timeout=2s --retries=20 \
   CMD curl -sf http://127.0.0.1:5400/api/health || exit 1
