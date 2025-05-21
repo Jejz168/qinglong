@@ -3,8 +3,10 @@ FROM node:20-slim as nodebuilder
 FROM python:3.10-slim-bullseye as builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
-  && apk update \
-  && apk add nodejs npm git \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends \
+     npm \
+     git \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
   && pnpm --registry https://registry.npmmirror.com install --prod
