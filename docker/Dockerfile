@@ -30,7 +30,6 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
   QL_BRANCH=${QL_BRANCH}
 
 RUN set -x \
-  && apt-get update -f \
   && apt-get upgrade \
   && apt-get install --no-install-recommends -y bash \
   coreutils \
