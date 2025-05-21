@@ -51,8 +51,9 @@ export function getToken(req: any) {
 }
 
 export async function getNetIp(req: any) {
-  const ipArray = [
+  const rawIps = [
     ...new Set([
+      ...(req.headers['cf-connecting-ip'] || '').split(','),
       ...(req.headers['x-real-ip'] || '').split(','),
       ...(req.headers['x-forwarded-for'] || '').split(','),
       req.ip,
@@ -60,29 +61,30 @@ export async function getNetIp(req: any) {
       req.socket.remoteAddress,
     ]),
   ];
-  let ip = ipArray[0];
 
-  if (ipArray.length > 1) {
-    for (let i = 0; i < ipArray.length; i++) {
-      const ipNumArray = ipArray[i].split('.');
-      const tmp = ipNumArray[0] + '.' + ipNumArray[1];
-      if (
-        tmp === '192.168' ||
-        (ipNumArray[0] === '172' &&
-          ipNumArray[1] >= 16 &&
-          ipNumArray[1] <= 32) ||
-        tmp === '10.7' ||
-        tmp === '127.0'
-      ) {
-        continue;
-      }
-      ip = ipArray[i];
-      break;
+  const ipArray = [...new Set(rawIps.map(ip => ip?.trim()).filter(Boolean))];
+  
+  let ip = '';
+  for (const item of ipArray) {
+    const ip4 = item?.replace(/^.*:/, '');
+    const parts = ip4.split('.');
+    const head = parts[0] + '.' + parts[1];
+
+    if (
+      head === '192.168' ||
+      head === '127.0' ||
+      head === '10.7' ||
+      (parts[0] === '172' && +parts[1] >= 16 && +parts[1] <= 32)
+    ) {
+      continue;
     }
+
+    ip = ip4;
+    break;
   }
-  ip = ip.substr(ip.lastIndexOf(':') + 1, ip.length);
-  if (ip.includes('127.0') || ip.includes('192.168') || ip.includes('10.7')) {
-    ip = '';
+
+  if (!ip) {
+    ip = ipArray[0]?.replace(/^.*:/, '') || '';
   }
 
   if (!ip) {
