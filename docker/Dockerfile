@@ -1,5 +1,3 @@
-FROM node:22-slim AS nodebuilder
-
 FROM python:3.10-slim-bookworm AS builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
@@ -39,12 +37,14 @@ RUN set -x \
   perl \
   openssl \
   nginx \
+  nodejs \
   jq \
   openssh-client \
   procps \
   netcat-openbsd \
   npm \
   cron \
+  && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -52,9 +52,8 @@ RUN set -x \
   && git config --global user.email "qinglong@@users.noreply.github.com" \
   && git config --global user.name "qinglong" \
   && git config --global http.postBuffer 524288000 \
-  && npm install -g pnpm@8.3.1 \
+  && npm install -g pnpm@8.3.1 pm2 tsx ts-node \
   && cd && pnpm config set registry https://registry.npmmirror.com \
-  && pnpm add -g pm2 tsx \
   && rm -rf /root/.pnpm-store \
   && rm -rf /root/.local/share/pnpm/store \
   && rm -rf /root/.cache \
