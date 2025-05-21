@@ -591,7 +591,7 @@ export default class NotificationService {
   }
 
   private async chronocat() {
-    const { chronocatURL, chronocatQQ, chronocatToekn } = this.params;
+    const { chronocatURL, chronocatQQ, chronocatToken } = this.params;
     try {
       const user_ids = chronocatQQ
         .match(/user_id=(\d+)/g)
