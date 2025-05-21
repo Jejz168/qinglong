@@ -1,13 +1,15 @@
+FROM node:22-slim AS nodebuilder
+
 FROM python:3.10-slim-bookworm AS builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
+COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
+COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 RUN set -x \
   && apt-get update \
-  && apt-get install -y --no-install-recommends \
-     npm \
-     git \
+  && apt-get install -y --no-install-recommends libatomic1 \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
-  && pnpm --registry https://registry.npmmirror.com install --prod
+  pnpm install --prod
 
 FROM python:3.10-slim-bookworm
 
@@ -15,6 +17,7 @@ ARG QL_MAINTAINER="Jejz168"
 LABEL maintainer="${QL_MAINTAINER}"
 ARG QL_URL=https://github.com/${QL_MAINTAINER}/qinglong.git
 ARG QL_BRANCH=debian
+ARG PYTHON_SHORT_VERSION=3.10
 
 ENV PNPM_HOME=/root/.local/share/pnpm \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/share/pnpm:/root/.local/share/pnpm/global/5/node_modules:/root/.local/share/pnpm \
@@ -25,34 +28,31 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
     QL_DIR=/ql \
     QL_BRANCH=${QL_BRANCH}
 
+COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
+COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
+
 RUN set -x \
   && apt-get update \
   && apt-get upgrade -y \
-  && apt-get install -y --no-install-recommends bash \
-  coreutils \
-  git \
+  && apt-get install -y --no-install-recommends git \
   curl \
   wget \
   tzdata \
   perl \
   openssl \
   nginx \
-  nodejs \
   jq \
   openssh-client \
   procps \
   netcat-openbsd \
-  npm \
-  cron \
+  libatomic1 \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo "Asia/Shanghai" > /etc/timezone \
   && git config --global user.email "qinglong@@users.noreply.github.com" \
   && git config --global user.name "qinglong" \
   && git config --global http.postBuffer 524288000 \
-  && npm install -g pnpm@8.3.1 pm2 tsx ts-node \
+  && npm install -g pnpm@8.3.1 pm2 tsx \
   && cd && pnpm config set registry https://registry.npmmirror.com \
   && rm -rf /root/.pnpm-store \
   && rm -rf /root/.local/share/pnpm/store \
