@@ -28,9 +28,9 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
     QL_BRANCH=${QL_BRANCH}
 
 RUN set -x \
-  && apt-get upgrade \
+  && apt-get update \
   && apt-get upgrade -y \
-  && apt-get install --no-install-recommends -y bash \
+  && apt-get install -y --no-install-recommends bash \
   coreutils \
   git \
   curl \
@@ -44,7 +44,7 @@ RUN set -x \
   procps \
   netcat-openbsd \
   npm \
-  && rm -rf /var/cache/apk/* \
+  && rm -rf /var/lib/apt/lists/* \
   && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo "Asia/Shanghai" > /etc/timezone \
