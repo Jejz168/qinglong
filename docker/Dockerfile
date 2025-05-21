@@ -10,7 +10,7 @@ RUN set -x \
   && apt-get install -y --no-install-recommends libatomic1 \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
-  && pnpm --registry https://registry.npmmirror.com install --prod
+  && pnpm install --prod
 
 FROM python:3.10-slim-bookworm
 
