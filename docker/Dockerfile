@@ -40,7 +40,7 @@ RUN set -x \
   openssl \
   nginx \
   jq \
-  openssh \
+  openssh-client \
   procps \
   netcat-openbsd \
   npm \
