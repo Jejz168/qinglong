@@ -7,7 +7,7 @@ COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_module
 RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
-  && apt-get install -y --no-install-recommends libatomic1 \
+  && apt-get install -y --no-install-recommends git \
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
   && pnpm install --prod
@@ -36,7 +36,9 @@ RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get upgrade -y \
-  && apt-get install -y --no-install-recommends git \
+  && apt-get install -y --no-install-recommends bash \
+  git \
+  coreutils \
   curl \
   wget \
   tzdata \
