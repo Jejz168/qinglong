@@ -603,7 +603,7 @@ export default class NotificationService {
       const url = `${chronocatURL}/api/message/send`;
       const headers = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${chronocatToekn}`,
+        Authorization: `Bearer ${chronocatToken}`,
       };
 
       for (const [chat_type, ids] of [
@@ -634,7 +634,7 @@ export default class NotificationService {
             json: data,
             headers,
           });
-          if (res.body === 'success') {
+          if (res.statusCode === 200) {
             return true;
           } else {
             throw new Error(res.body);
