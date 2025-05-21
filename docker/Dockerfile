@@ -5,6 +5,7 @@ COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 RUN set -x \
+  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get install -y --no-install-recommends libatomic1 \
   && npm i -g pnpm@8.3.1 \
@@ -32,6 +33,7 @@ COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 
 RUN set -x \
+  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends git \
