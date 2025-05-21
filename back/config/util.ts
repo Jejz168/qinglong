@@ -99,7 +99,7 @@ export async function getNetIp(req: any) {
         retry: 0,
       })
       .buffer();
-    const [data, ipApiBody] = await await Promise.all<any>([baiduApi, ipApi]);
+    const [data, ipApiBody] = await Promise.all<any>([baiduApi, ipApi]);
 
     const ipRegx = /.*IP	:(.*)\n/;
     const addrRegx = /.*数据二	:(.*)\n/;
