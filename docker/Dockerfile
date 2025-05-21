@@ -44,6 +44,7 @@ RUN set -x \
   procps \
   netcat-openbsd \
   npm \
+  cron \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get update \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
