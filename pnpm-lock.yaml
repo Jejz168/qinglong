@@ -99,7 +99,7 @@ dependencies:
     version: 0.1.13
   sequelize:
     specifier: ^6.25.5
-    version: 6.32.0(@whyour/sqlite3@1.0.4)
+    version: 6.32.0(@whyour/sqlite3@1.0.3)
   serve-handler:
     specifier: ^6.1.3
     version: 6.1.5
@@ -107,8 +107,8 @@ dependencies:
     specifier: ^0.3.24
     version: 0.3.24
   sqlite3:
-    specifier: git+https://github.com/whyour/node-sqlite3.git#v1.0.4
-    version: github.com/whyour/node-sqlite3/4fcd31f80caa3fc292356b9d99258b601c620488
+    specifier: git+https://github.com/whyour/node-sqlite3.git#v1.0.3
+    version: github.com/whyour/node-sqlite3/3a00af0b5d7603b7f1b290032507320b18a6b741
   tar:
     specifier: ^6.1.15
     version: 6.1.15
@@ -14478,7 +14478,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: false
 
-  /sequelize@6.32.0(@whyour/sqlite3@1.0.4):
+  /sequelize@6.32.0(@whyour/sqlite3@1.0.3):
     resolution: {integrity: sha512-gMd1M6kPANyrCeU/vtgEP5gnse7sVsiKbJyz7p4huuW8zZcRopj47UlglvdrMuIoqksZmsUPfApmMo6ZlJpcvg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
@@ -14523,7 +14523,7 @@ packages:
       retry-as-promised: 7.0.4
       semver: 7.5.1
       sequelize-pool: 7.1.0
-      sqlite3: github.com/whyour/node-sqlite3/4fcd31f80caa3fc292356b9d99258b601c620488
+      sqlite3: github.com/whyour/node-sqlite3/3a00af0b5d7603b7f1b290032507320b18a6b741
       toposort-class: 1.0.1
       uuid: 8.3.2
       validator: 13.9.0
@@ -16439,10 +16439,10 @@ packages:
       strip-indent: 2.0.0
     dev: true
 
-  github.com/whyour/node-sqlite3/4fcd31f80caa3fc292356b9d99258b601c620488:
-    resolution: {tarball: https://codeload.github.com/whyour/node-sqlite3/tar.gz/4fcd31f80caa3fc292356b9d99258b601c620488}
+  github.com/whyour/node-sqlite3/3a00af0b5d7603b7f1b290032507320b18a6b741:
+    resolution: {tarball: https://codeload.github.com/whyour/node-sqlite3/tar.gz/3a00af0b5d7603b7f1b290032507320b18a6b741}
     name: '@whyour/sqlite3'
-    version: 1.0.4
+    version: 1.0.3
     requiresBuild: true
     peerDependenciesMeta:
       node-gyp:
