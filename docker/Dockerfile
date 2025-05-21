@@ -1,8 +1,6 @@
 FROM node:22-slim AS nodebuilder
 
-FROM python:3.10-slim-bullseye as builder
-
-# 安装 Node.js 相关依赖
+FROM python:3.10-slim-bookworm AS builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 RUN set -x \
   && apt-get update \
@@ -13,7 +11,7 @@ RUN set -x \
   && cd /tmp/build \
   && pnpm --registry https://registry.npmmirror.com install --prod
 
-FROM python:3.10-slim-bullseye
+FROM python:3.10-slim-bookworm
 
 ARG QL_MAINTAINER="Jejz168"
 LABEL maintainer="${QL_MAINTAINER}"
