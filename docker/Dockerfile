@@ -29,6 +29,7 @@ ENV PNPM_HOME=/root/.local/share/pnpm \
 
 RUN set -x \
   && apt-get upgrade \
+  && apt-get upgrade -y \
   && apt-get install --no-install-recommends -y bash \
   coreutils \
   git \
