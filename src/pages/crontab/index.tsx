@@ -36,6 +36,7 @@ import {
   PlusOutlined,
   UnorderedListOutlined,
   CheckOutlined,
+  CopyOutlined,
 } from '@ant-design/icons';
 import config from '@/utils/config';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -57,6 +58,7 @@ import { useVT } from 'virtualizedtableforantd4';
 import { ICrontab, OperationName, OperationPath, CrontabStatus } from './type';
 import Name from '@/components/name';
 import dayjs from 'dayjs';
+import { omit } from 'lodash';
 
 const { Text, Paragraph, Link } = Typography;
 const { Search } = Input;
@@ -618,6 +620,7 @@ const Crontab = () => {
         icon:
           record.isDisabled === 1 ? <CheckCircleOutlined /> : <StopOutlined />,
       },
+      { label: intl.get('复制'), key: 'copy', icon: <CopyOutlined /> },
       { label: intl.get('删除'), key: 'delete', icon: <DeleteOutlined /> },
       {
         label: record.isPinned === 1 ? intl.get('取消置顶') : intl.get('置顶'),
@@ -652,6 +655,9 @@ const Crontab = () => {
     switch (key) {
       case 'edit':
         editCron(record, index);
+        break;
+      case 'copy':
+        editCron(omit(record, 'id'), index);
         break;
       case 'enableOrDisable':
         enabledOrDisabledCron(record, index);
