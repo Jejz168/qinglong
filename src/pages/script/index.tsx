@@ -108,6 +108,7 @@ const Script = () => {
       };
       const item = findNode(_data, (c) => c.key === obj.node.key);
       if (item) {
+        obj.node = item;
         setExpandedKeys([p as string]);
         onTreeSelect([vkey], obj);
       }
