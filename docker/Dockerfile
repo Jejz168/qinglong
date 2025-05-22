@@ -7,7 +7,7 @@ COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_module
 RUN set -x && \
   ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
   apt-get update && \
-  apt-get install --no-install-recommends -y libatomic1 && \
+  apt-get install --no-install-recommends -y git libatomic1 && \
   npm i -g pnpm@8.3.1 && \
   cd /tmp/build && \
   pnpm --registry https://registry.npmmirror.com install --prod
