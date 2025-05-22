@@ -1,6 +1,6 @@
-FROM node:18-slim as nodebuilder
+FROM node:18-slim AS nodebuilder
 
-FROM python:3.10-slim-bullseye as builder
+FROM python:3.10-slim-bullseye AS builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
