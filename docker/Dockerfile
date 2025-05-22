@@ -49,19 +49,22 @@ RUN set -x \
   openssh-client \
   procps \
   netcat-openbsd \
+  unzip \
   libatomic1 \
+  cron \
   && apt-get clean \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo "Asia/Shanghai" > /etc/timezone \
   && git config --global user.email "qinglong@@users.noreply.github.com" \
   && git config --global user.name "qinglong" \
   && git config --global http.postBuffer 524288000 \
-  && npm install -g pnpm@8.3.1 pm2 tsx \
+  && npm install -g pnpm@8.3.1 pm2 tsx ts-node \
   && cd && pnpm config set registry https://registry.npmmirror.com \
   && rm -rf /root/.pnpm-store \
   && rm -rf /root/.local/share/pnpm/store \
   && rm -rf /root/.cache \
   && rm -rf /root/.npm
+  && ulimit -c 0
 
 ARG SOURCE_COMMIT
 RUN git clone --depth=1 -b ${QL_BRANCH} ${QL_URL} ${QL_DIR} \
