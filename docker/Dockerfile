@@ -6,8 +6,8 @@ COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 RUN set -x && \
   ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
-  apt update && \
-  apt install --no-install-recommends -y libatomic1 && \
+  apt-get update && \
+  apt-get install --no-install-recommends -y libatomic1 && \
   npm i -g pnpm@8.3.1 && \
   cd /tmp/build && \
   pnpm --registry https://registry.npmmirror.com install --prod
@@ -18,24 +18,25 @@ ARG QL_MAINTAINER="whyour"
 LABEL maintainer="${QL_MAINTAINER}"
 ARG QL_URL=https://github.com/${QL_MAINTAINER}/qinglong.git
 ARG QL_BRANCH=debian
+ARG PYTHON_SHORT_VERSION=3.10
 
 ENV PNPM_HOME=/root/.local/share/pnpm \
-  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/share/pnpm:/root/.local/share/pnpm/global/5/node_modules:$PNPM_HOME \
-  NODE_PATH=/usr/local/bin:/usr/local/pnpm-global/5/node_modules:/usr/local/lib/node_modules:/root/.local/share/pnpm/global/5/node_modules \
-  LANG=C.UTF-8 \
-  SHELL=/bin/bash \
-  PS1="\u@\h:\w \$ " \
-  QL_DIR=/ql \
-  QL_BRANCH=${QL_BRANCH}
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/share/pnpm:/root/.local/share/pnpm/global/5/node_modules:$PNPM_HOME \
+    NODE_PATH=/usr/local/bin:/usr/local/pnpm-global/5/node_modules:/usr/local/lib/node_modules:/root/.local/share/pnpm/global/5/node_modules \
+    LANG=C.UTF-8 \
+    SHELL=/bin/bash \
+    PS1="\u@\h:\w \$ " \
+    QL_DIR=/ql \
+    QL_BRANCH=${QL_BRANCH}
 
 COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 
 RUN set -x && \
   ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
-  apt update && \
-  apt upgrade -y && \
-  apt install --no-install-recommends -y git \
+  apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install --no-install-recommends -y git \
   curl \
   wget \
   tzdata \
@@ -47,7 +48,7 @@ RUN set -x && \
   procps \
   netcat \
   libatomic1 && \
-  apt clean && \
+  apt-get clean && \
   ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
   echo "Asia/Shanghai" >/etc/timezone && \
   git config --global user.email "qinglong@@users.noreply.github.com" && \
