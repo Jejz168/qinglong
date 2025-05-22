@@ -408,7 +408,9 @@ export default class CronService {
           return;
         }
 
-        this.logger.info(`[panel][开始执行任务] 参数 ${JSON.stringify(params)}`);
+        this.logger.info(
+          `[panel][开始执行任务] 参数: ${JSON.stringify(params)}`,
+        );
 
         let { id, command, log_path } = cron;
         const uniqPath = await getUniqPath(command, `${id}`);
@@ -427,13 +429,28 @@ export default class CronService {
           { where: { id } },
         );
         cp.stderr.on('data', (data) => {
+          this.logger.info(
+            '[panel][执行任务失败] 命令: %s, 错误信息: %j',
+            command,
+            data.toString(),
+          );
           fs.appendFileSync(`${absolutePath}`, `${data.toString()}`);
         });
         cp.on('error', (err) => {
+          this.logger.error(
+            '[panel][创建任务失败] 命令: %s, 错误信息: %j',
+            command,
+            err,
+          );
           fs.appendFileSync(`${absolutePath}`, `${JSON.stringify(err)}`);
         });
 
         cp.on('exit', async (code) => {
+          this.logger.info(
+            '[panel][执行任务结束] 参数: %s, 退出码: %j',
+            JSON.stringify(params),
+            code,
+          );
           await CrontabModel.update(
             { status: CrontabStatus.idle, pid: undefined },
             { where: { id } },
