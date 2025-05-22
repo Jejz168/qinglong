@@ -20,7 +20,7 @@ jobs:
 
       - name: build front and back
         run: |
-          pnpm install --no-frozen-lockfile
+          pnpm install --frozen-lockfile
           pnpm build:front
           pnpm build:back
 
