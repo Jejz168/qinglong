@@ -51,7 +51,6 @@ export default class ScheduleService {
       schedule?: string;
       name?: string;
       command?: string;
-      id: string;
     },
     completionTime: 'start' | 'end' = 'end',
   ) {
