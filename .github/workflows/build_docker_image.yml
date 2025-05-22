@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies and regenerate lockfile
         run: |
-          pnpm install
+          pnpm install --no-frozen-lockfile
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # 如果锁文件有变化，提交它
