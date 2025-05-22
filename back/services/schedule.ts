@@ -13,10 +13,11 @@ import taskLimit from '../shared/pLimit';
 import { spawn } from 'cross-spawn';
 
 export interface ScheduleTaskType {
-  id: number;
+  id?: number;
   command: string;
   name?: string;
   schedule?: string;
+  runOrigin: 'subscription' | 'system' | 'script';
 }
 
 export interface TaskCallbacks {
@@ -51,12 +52,21 @@ export default class ScheduleService {
       schedule?: string;
       name?: string;
       command?: string;
+      id: string;
+      runOrigin: 'subscription' | 'system' | 'script';
     },
     completionTime: 'start' | 'end' = 'end',
   ) {
-    return taskLimit.runWithCronLimit(() => {
+    const { runOrigin, ...others } = params;
+    
+    return taskLimit[this.taskLimitMap[runOrigin]](others, () => {
       return new Promise(async (resolve, reject) => {
-        this.logger.info(`[panel][开始执行任务] 参数 ${JSON.stringify({ ...params, command })}`);
+        this.logger.info(
+          `[panel][开始执行任务] 参数: ${JSON.stringify({
+            ...others,
+            command,
+          })}`,
+        );
 
         try {
           const startTime = dayjs();
@@ -90,13 +100,21 @@ export default class ScheduleService {
           });
 
           cp.on('exit', async (code) => {
+            this.logger.info(
+              '[panel][执行任务结束] 参数: %s, 退出码: %j',
+              JSON.stringify({
+                ...others,
+                command,
+              }),
+              code,
+            );
             const endTime = dayjs();
             await callbacks.onEnd?.(
               cp,
               endTime,
               endTime.diff(startTime, 'seconds'),
             );
-            resolve({ ...params, pid: cp.pid, code });
+            resolve({ ...others, pid: cp.pid, code });
           });
         } catch (error) {
           this.logger.error(
@@ -131,6 +149,8 @@ export default class ScheduleService {
           name,
           schedule,
           command,
+          id: _id,
+          runOrigin,
         });
       }),
     );
@@ -140,6 +160,8 @@ export default class ScheduleService {
         name,
         schedule,
         command,
+        id: _id,
+        runOrigin,
       });
     }
   }
@@ -172,11 +194,13 @@ export default class ScheduleService {
         this.runTask(command, callbacks, {
           name,
           command,
+          id: _id,
+          runOrigin,
         });
       },
       (err) => {
         this.logger.error(
-          '[执行任务失败] 命令: %s, 错误信息: %j',
+          '[panel][执行任务失败] 命令: %s, 错误信息: %j',
           command,
           err,
         );
@@ -195,13 +219,19 @@ export default class ScheduleService {
       this.runTask(command, callbacks, {
         name,
         command,
+        id: _id,
+        runOrigin,
       });
     }
   }
 
   async cancelIntervalTask({ id = 0, name }: ScheduleTaskType) {
     const _id = this.formatId(id);
-    this.logger.info('[取消interval任务], 任务ID: %s, 任务名: %s', _id, name);
+    this.logger.info(
+      '[panel][取消interval任务], 任务ID: %s, 任务名: %s',
+      _id,
+      name,
+    );
     this.intervalSchedule.removeById(_id);
   }
 
