@@ -58,7 +58,7 @@ import { useVT } from 'virtualizedtableforantd4';
 import { ICrontab, OperationName, OperationPath, CrontabStatus } from './type';
 import Name from '@/components/name';
 import dayjs from 'dayjs';
-import { omit } from 'lodash';
+import { noop, omit } from 'lodash';
 
 const { Text, Paragraph, Link } = Typography;
 const { Search } = Input;
@@ -393,6 +393,18 @@ const Crontab = () => {
       .then(({ code, data: _data }) => {
         if (code === 200) {
           const { data, total } = _data;
+          const subscriptions = await request.get(
+            `${config.apiPrefix}subscriptions?ids=${JSON.stringify([
+              ...new Set(data.map((x) => x.sub_id).filter(Boolean)),
+            ])}`,
+            {
+              onError: noop,
+            },
+          );
+          const subscriptionMap = Object.fromEntries(
+            subscriptions?.data?.map((x) => [x.id, x]),
+          );
+          
           setValue(
             data.map((x) => {
               return {
