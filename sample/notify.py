@@ -760,7 +760,7 @@ def parse_body(body, content_type):
         if i == -1:
             continue
 
-        key = line[:i].strip().lower()
+        key = line[:i].strip()
         val = line[i + 1 :].strip()
 
         if not key or key in parsed:
