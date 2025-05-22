@@ -17,7 +17,6 @@ export interface ScheduleTaskType {
   command: string;
   name?: string;
   schedule?: string;
-  runOrigin: 'subscription' | 'system' | 'script';
 }
 
 export interface TaskCallbacks {
@@ -53,17 +52,15 @@ export default class ScheduleService {
       name?: string;
       command?: string;
       id: string;
-      runOrigin: 'subscription' | 'system' | 'script';
     },
     completionTime: 'start' | 'end' = 'end',
   ) {
-    const { runOrigin, ...others } = params;
     
-    return taskLimit[this.taskLimitMap[runOrigin]](others, () => {
+    return taskLimit.runWithCronLimit(() => {
       return new Promise(async (resolve, reject) => {
         this.logger.info(
           `[panel][开始执行任务] 参数: ${JSON.stringify({
-            ...others,
+            ...params,
             command,
           })}`,
         );
@@ -103,7 +100,7 @@ export default class ScheduleService {
             this.logger.info(
               '[panel][执行任务结束] 参数: %s, 退出码: %j',
               JSON.stringify({
-                ...others,
+                ...params,
                 command,
               }),
               code,
@@ -114,7 +111,7 @@ export default class ScheduleService {
               endTime,
               endTime.diff(startTime, 'seconds'),
             );
-            resolve({ ...others, pid: cp.pid, code });
+            resolve({ ...params, pid: cp.pid, code });
           });
         } catch (error) {
           this.logger.error(
@@ -149,8 +146,6 @@ export default class ScheduleService {
           name,
           schedule,
           command,
-          id: _id,
-          runOrigin,
         });
       }),
     );
@@ -160,8 +155,6 @@ export default class ScheduleService {
         name,
         schedule,
         command,
-        id: _id,
-        runOrigin,
       });
     }
   }
@@ -194,8 +187,6 @@ export default class ScheduleService {
         this.runTask(command, callbacks, {
           name,
           command,
-          id: _id,
-          runOrigin,
         });
       },
       (err) => {
@@ -219,8 +210,6 @@ export default class ScheduleService {
       this.runTask(command, callbacks, {
         name,
         command,
-        id: _id,
-        runOrigin,
       });
     }
   }
