@@ -390,7 +390,7 @@ const Crontab = () => {
     }
     request
       .get(url)
-      .then(({ code, data: _data }) => {
+      .then(async ({ code, data: _data }) => {
         if (code === 200) {
           const { data, total } = _data;
           const subscriptions = await request.get(
