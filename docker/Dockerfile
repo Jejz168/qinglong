@@ -63,7 +63,7 @@ RUN set -x \
   && rm -rf /root/.pnpm-store \
   && rm -rf /root/.local/share/pnpm/store \
   && rm -rf /root/.cache \
-  && rm -rf /root/.npm
+  && rm -rf /root/.npm \
   && ulimit -c 0
 
 ARG SOURCE_COMMIT
