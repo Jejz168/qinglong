@@ -1,68 +1,33 @@
 name: Build And Push Docker Image
 
 on:
-  push:
-    branches:
-      - 'master'
-      - 'develop'
-    tags:
-      - 'v*'
-  schedule:
-    - cron: '00 20 * * *'
+  #schedule:
+    #- cron: '00 20 * * *'
   workflow_dispatch:
 
 jobs:
-  to_gitlab:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: pixta-dev/repository-mirroring-action@v1
-        with:
-          target_repo_url:
-            git@gitlab.com:whyour/qinglong.git
-          ssh_private_key:
-            ${{ secrets.GITLAB_SSH_PK }}
-  
-  to_gitee:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: pixta-dev/repository-mirroring-action@v1
-        with:
-          target_repo_url:
-            git@gitee.com:whyour/qinglong.git
-          ssh_private_key:
-            ${{ secrets.GITLAB_SSH_PK }}
-
   build-static:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
         with:
           version: '8.3.1'
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
 
       - name: build front and back
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --no-frozen-lockfile
           pnpm build:front
           pnpm build:back
 
       - name: copy to static repo
         env:
-          GITHUB_REPO: github.com/${{ github.repository_owner }}/qinglong-static
+          GITHUB_REPO: github.com/Jejz168/qinglong-static
           GITHUB_BRANCH: ${{ github.ref_name }}
-          REPO_GITEE: git@gitee.com:whyour/qinglong-static.git
-          REPO_GITLAB: git@gitlab.com:whyour/qinglong-static.git
-          PRIVATE_KEY: ${{ secrets.GITLAB_SSH_PK }}
         run: |
           mkdir -p tmp
           cd ./tmp
@@ -71,23 +36,13 @@ jobs:
           git config --local user.name 'github-actions[bot]'
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
           git commit --allow-empty -m "copy static at $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --force --quiet "https://${{ secrets.API_TOKEN }}@${GITHUB_REPO}.git" ${GITHUB_BRANCH}:${GITHUB_BRANCH}
-
-          mkdir -p ~/.ssh
-          echo "${PRIVATE_KEY}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          export GIT_SSH_COMMAND="ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -l git"
-          git remote add gitee "${REPO_GITEE}"
-          git remote add gitlab "${REPO_GITLAB}"
-          git push --force --quiet gitee ${GITHUB_BRANCH}:${GITHUB_BRANCH}
-          git push --force --quiet gitlab ${GITHUB_BRANCH}:${GITHUB_BRANCH}
+          git push --force --quiet "https://${{ secrets.API_TOKEN }}@github.com/Jejz168/qinglong-static.git" ${GITHUB_BRANCH}:${GITHUB_BRANCH}
 
   build:
     needs: build-static
 
     # 由于 ubuntu-latest 中使用 linux6.x 内核 linux/s390x npm 无法使用
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     permissions:
       packages: write
@@ -95,10 +50,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
           version: '8.3.1'
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
 
@@ -156,14 +111,11 @@ jobs:
             QL_BRANCH=${{ github.ref_name }}
             SOURCE_COMMIT=${{ github.sha }}
           network: host
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,linux/386
+          platforms: linux/amd64,linux/arm64
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=whyour/qinglong:cache
-          cache-to: type=registry,ref=whyour/qinglong:cache,mode=max
+          tags: jejz/ql:debian-python3.10
       
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
