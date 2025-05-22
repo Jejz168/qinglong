@@ -10,9 +10,6 @@ dependencies:
   '@sentry/node':
     specifier: ^7.12.1
     version: 7.54.0
-  '@sentry/tracing':
-    specifier: ^7.12.1
-    version: 7.54.0
   body-parser:
     specifier: ^1.19.2
     version: 1.20.2
@@ -4482,13 +4479,6 @@ packages:
       '@sentry/types': 7.54.0
       '@sentry/utils': 7.54.0
     dev: true
-
-  /@sentry/tracing@7.54.0:
-    resolution: {integrity: sha512-IyflAAqOiKuNvhWXrJsXN8yfl8DbHRpfgtCEPo5TBvdkpcyxUyfE8W2a2MQ8MXDzgfJT1IixXEwleO+qPIi3Gg==}
-    engines: {node: '>=8'}
-    dependencies:
-      '@sentry-internal/tracing': 7.54.0
-    dev: false
 
   /@sentry/types@7.54.0:
     resolution: {integrity: sha512-D+i9xogBeawvQi2r0NOrM7zYcUaPuijeME4O9eOTrDF20tj71hWtJLilK+KTGLYFtpGg1h+9bPaz7OHEIyVopg==}
