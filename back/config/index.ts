@@ -25,6 +25,7 @@ const tmpPath = path.join(rootPath, '.tmp/');
 const samplePath = path.join(rootPath, 'sample/');
 const configPath = path.join(dataPath, 'config/');
 const scriptPath = path.join(dataPath, 'scripts/');
+const repoPath = path.join(dataPath, 'repo/');
 const bakPath = path.join(dataPath, 'bak/');
 const logPath = path.join(dataPath, 'log/');
 const dbPath = path.join(dataPath, 'db/');
@@ -83,6 +84,7 @@ export default {
   uploadPath,
   configPath,
   scriptPath,
+  repoPath,
   samplePath,
   blackFileList: [
     'auth.json',
