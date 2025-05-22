@@ -1,4 +1,4 @@
-FROM node:22-slim AS nodebuilder
+FROM node:20-slim AS nodebuilder
 
 FROM python:3.10-slim-bookworm AS builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
@@ -7,7 +7,7 @@ COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_module
 RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
-  && apt-get install -y --no-install-recommends git \
+  && apt-get install -y --no-install-recommends git libatomic1\
   && npm i -g pnpm@8.3.1 \
   && cd /tmp/build \
   && pnpm install --prod
