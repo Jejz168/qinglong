@@ -1,6 +1,6 @@
 FROM node:22-slim AS nodebuilder
 
-FROM python:3.11-slim-bullseye AS builder
+FROM python:3.10-slim-bookworm AS builder
 COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
@@ -12,7 +12,7 @@ RUN set -x \
   && cd /tmp/build \
   && pnpm install --prod
 
-FROM python:3.11-slim-bullseye
+FROM python:3.10-slim-bookworm
 
 ARG QL_MAINTAINER="Jejz168"
 LABEL maintainer="${QL_MAINTAINER}"
@@ -44,13 +44,14 @@ RUN set -x \
   tzdata \
   perl \
   openssl \
+  openssh-client \
   nginx \
   jq \
-  openssh-client \
   procps \
-  netcat \
+  netcat-openbsd \
   unzip \
   libatomic1 \
+  cron \
   && apt-get clean \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo "Asia/Shanghai" > /etc/timezone \
