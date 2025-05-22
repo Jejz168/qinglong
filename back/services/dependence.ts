@@ -309,17 +309,7 @@ export default class DependenceService {
               ? DependenceStatus.installFailed
               : DependenceStatus.removeFailed;
           }
-          const docs = await DependenceModel.findAll({ where: { id: depIds } });
-          const _docIds = docs
-            .filter((x) => x.status !== DependenceStatus.cancelled)
-            .map((x) => x.id!);
-
-          if (_docIds.length > 0) {
-            await DependenceModel.update(
-              { status },
-              { where: { id: _docIds } },
-            );
-          }
+          await DependenceModel.update({ status }, { where: { id: depIds } });
 
           // 如果删除依赖成功或者强制删除
           if ((isSucceed || force) && !isInstall) {
