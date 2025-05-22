@@ -20,14 +20,15 @@ ARG QL_URL=https://github.com/${QL_MAINTAINER}/qinglong.git
 ARG QL_BRANCH=debian
 ARG PYTHON_SHORT_VERSION=3.10
 
-ENV PNPM_HOME=/root/.local/share/pnpm \
-    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/share/pnpm:/root/.local/share/pnpm/global/5/node_modules:$PNPM_HOME \
-    NODE_PATH=/usr/local/bin:/usr/local/pnpm-global/5/node_modules:/usr/local/lib/node_modules:/root/.local/share/pnpm/global/5/node_modules \
-    LANG=C.UTF-8 \
-    SHELL=/bin/bash \
-    PS1="\u@\h:\w \$ " \
-    QL_DIR=/ql \
-    QL_BRANCH=${QL_BRANCH}
+ENV PNPM_HOME=/root/.local/share/pnpm
+
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PNPM_HOME}:${PNPM_HOME}/global/5/node_modules:${PNPM_HOME} \
+  NODE_PATH=/usr/local/bin:/usr/local/pnpm-global/5/node_modules:/usr/local/lib/node_modules:${PNPM_HOME}/global/5/node_modules \
+  LANG=C.UTF-8 \
+  SHELL=/bin/bash \
+  PS1="\u@\h:\w \$ " \
+  QL_DIR=/ql \
+  QL_BRANCH=${QL_BRANCH}
 
 COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
