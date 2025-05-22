@@ -5,7 +5,12 @@ import Logger from '../loaders/logger';
 export function runCron(cmd: string, options?: { schedule: string; extraSchedules: Array<{ schedule: string }>; name: string }): Promise<number | void> {
   return taskLimit.runWithCronLimit(() => {
     return new Promise(async (resolve: any) => {
-      Logger.info(`[schedule][开始执行任务] 参数 ${JSON.stringify({ ...options, command: cmd })}`);
+      Logger.info(
+        `[schedule][开始执行任务] 参数: ${JSON.stringify({
+          ...options,
+          command: cmd,
+        })}`,
+      );
       const cp = spawn(cmd, { shell: '/bin/bash' });
 
       cp.stderr.on('data', (data) => {
@@ -24,6 +29,14 @@ export function runCron(cmd: string, options?: { schedule: string; extraSchedule
       });
 
       cp.on('exit', async (code) => {
+        Logger.info(
+          '[schedule][执行任务结束] 参数: %s, 退出码: %j',
+          JSON.stringify({
+            ...options,
+            command: cmd,
+          }),
+          code,
+        );
         resolve({ ...options, command: cmd, pid: cp.pid, code });
       });
     });
