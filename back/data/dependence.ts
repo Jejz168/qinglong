@@ -32,7 +32,6 @@ export enum DependenceStatus {
   'removed',
   'removeFailed',
   'queued',
-  'cancelled',
 }
 
 export enum DependenceTypes {
