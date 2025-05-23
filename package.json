@@ -71,7 +71,7 @@
     "express-rate-limit": "^7.0.0",
     "express-urlrewrite": "^1.4.0",
     "form-data": "^4.0.0",
-    "got": "^11.8.2",
+    "got": "^11.8.3",
     "hpagent": "^1.2.0",
     "http-proxy-middleware": "^2.0.6",
     "iconv-lite": "^0.6.3",
