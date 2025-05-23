@@ -50,7 +50,6 @@ RUN set -x \
   unzip \
   libatomic1 \
   npm \
-  cron \
   && apt-get clean \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo "Asia/Shanghai" > /etc/timezone \
