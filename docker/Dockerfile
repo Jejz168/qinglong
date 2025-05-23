@@ -5,10 +5,9 @@ COPY package.json .npmrc pnpm-lock.yaml /tmp/build/
 COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 RUN set -x \
-  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
-  && apt-get install -y --no-install-recommends git libatomic1\
-  && npm i -g pnpm@8.3.1 \
+  && apt-get install -y --no-install-recommends npm git libatomic1\
+  && npm i -g pnpm@8.3.1 pm2 ts-node \
   && cd /tmp/build \
   && pnpm install --prod
 
@@ -33,7 +32,6 @@ COPY --from=nodebuilder /usr/local/bin/node /usr/local/bin/
 COPY --from=nodebuilder /usr/local/lib/node_modules/. /usr/local/lib/node_modules/
 
 RUN set -x \
-  && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends bash \
@@ -51,6 +49,7 @@ RUN set -x \
   netcat-openbsd \
   unzip \
   libatomic1 \
+  npm \
   cron \
   && apt-get clean \
   && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -63,8 +62,7 @@ RUN set -x \
   && rm -rf /root/.pnpm-store \
   && rm -rf /root/.local/share/pnpm/store \
   && rm -rf /root/.cache \
-  && rm -rf /root/.npm \
-  && ulimit -c 0
+  && rm -rf /root/.npm
 
 ARG SOURCE_COMMIT
 RUN git clone --depth=1 -b ${QL_BRANCH} ${QL_URL} ${QL_DIR} \
