@@ -50,7 +50,7 @@ dependencies:
     specifier: ^4.0.0
     version: 4.0.0
   got:
-    specifier: ^11.8.2
+    specifier: ^11.8.3
     version: 11.8.6
   hpagent:
     specifier: ^1.2.0
