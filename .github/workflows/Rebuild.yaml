@@ -27,6 +27,7 @@ jobs:
 
       - name: Install dependencies and regenerate lockfile
         env:
+          GITHUB_TOKEN: ${{ secrets.API_TOKEN }}
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
           pnpm install --no-frozen-lockfile
@@ -35,6 +36,7 @@ jobs:
           if [[ -n "$(git status --porcelain pnpm-lock.yaml)" ]]; then
             git add pnpm-lock.yaml
             git commit -m "fix: regenerate pnpm-lock.yaml via CI"
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/Jejz168/qinglong.git
             git push origin HEAD:$BRANCH_NAME
           else
             echo "pnpm-lock.yaml no changes"
