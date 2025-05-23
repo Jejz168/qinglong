@@ -37,9 +37,7 @@ RUN set -x \
   && ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
   && apt-get update \
   && apt-get upgrade -y \
-  && apt-get install -y --no-install-recommends bash \
-  git \
-  coreutils \
+  && apt-get install -y --no-install-recommends git \
   curl \
   wget \
   tzdata \
@@ -64,7 +62,8 @@ RUN set -x \
   && rm -rf /root/.pnpm-store \
   && rm -rf /root/.local/share/pnpm/store \
   && rm -rf /root/.cache \
-  && rm -rf /root/.npm
+  && rm -rf /root/.npm \
+  && ulimit -c 0
 
 ARG SOURCE_COMMIT
 RUN git clone --depth=1 -b ${QL_BRANCH} ${QL_URL} ${QL_DIR} \
